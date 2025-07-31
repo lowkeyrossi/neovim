@@ -1,16 +1,8 @@
 name: release
 on:
-  schedule:
-    - cron: '5 5 * * *'
-  workflow_dispatch:
-    inputs:
-      tag_name:
-        description: 'Tag name for release'
-        required: false
-        default: nightly
   push:
-    tags:
-      - v[0-9]+.[0-9]+.[0-9]+
+    branches:
+      - WoA
 
 # Build on the oldest supported images, so we have broader compatibility
 jobs:
@@ -132,8 +124,13 @@ jobs:
 
   windows:
     needs: setup
-    runs-on: windows-2022
-    steps:
+    strategy:
+      matrix:
+        arch:
+          - x64
+          - arm64
+      runs-on: ${{ matrix.arch == 'arm64' && 'windows-11-arm' || 'windows-2022' }}
+      steps:
       - uses: actions/checkout@v4
         with:
           # Perform a full checkout #13471
@@ -151,8 +148,8 @@ jobs:
         with:
           name: nvim-win64
           path: |
-            build/nvim-win64.msi
-            build/nvim-win64.zip
+            build/nvim-win${{ matrix.arch == 'arm64' && 'arm64' || '64' }}.msi
+            build/nvim-win${{ matrix.arch == 'arm64' && 'arm64' || '64' }}.zip
           retention-days: 1
 
   publish:
@@ -200,6 +197,6 @@ jobs:
         run: |
           envsubst < "$GITHUB_WORKSPACE/.github/workflows/notes.md" > "$RUNNER_TEMP/notes.md"
           if [ "$TAG_NAME" != "nightly" ]; then
-            gh release create stable $PRERELEASE --notes-file "$RUNNER_TEMP/notes.md" --title "$SUBJECT" --target $GITHUB_SHA nvim-macos-x86_64/* nvim-macos-arm64/* nvim-linux-x86_64/* nvim-linux-arm64/* nvim-appimage-x86_64/* nvim-appimage-arm64/* nvim-win64/*
+            gh release create stable $PRERELEASE --notes-file "$RUNNER_TEMP/notes.md" --title "$SUBJECT" --target $GITHUB_SHA nvim-macos-x86_64/* nvim-macos-arm64/* nvim-linux-x86_64/* nvim-linux-arm64/* nvim-appimage-x86_64/* nvim-appimage-arm64/* nvim-win64/* nvim-winarm64/*
           fi
-          gh release create $TAG_NAME $PRERELEASE --notes-file "$RUNNER_TEMP/notes.md" --title "$SUBJECT" --target $GITHUB_SHA nvim-macos-x86_64/* nvim-macos-arm64/* nvim-linux-x86_64/* nvim-linux-arm64/* nvim-appimage-x86_64/* nvim-appimage-arm64/* nvim-win64/*
+          gh release create $TAG_NAME $PRERELEASE --notes-file "$RUNNER_TEMP/notes.md" --title "$SUBJECT" --target $GITHUB_SHA nvim-macos-x86_64/* nvim-macos-arm64/* nvim-linux-x86_64/* nvim-linux-arm64/* nvim-appimage-x86_64/* nvim-appimage-arm64/* nvim-win64/* nvim-winarm64/*
