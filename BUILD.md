@@ -3,7 +3,7 @@
 
 ## Quick start
 
-1. Install [build prerequisites](#build-prerequisites) on your system
+1. Install [build prerequisites](#build-prerequisites) on your syste m
 2. `git clone https://github.com/neovim/neovim`
 3. `cd neovim`
     - If you want the **stable release**, also run `git checkout stable`.
