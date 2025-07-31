@@ -138,9 +138,7 @@ jobs:
     - name: Install WiX Toolset for Win-ARM64
       if: matrix.arch == 'arm64'
       run: |
-        Invoke-WebRequest -Uri "https://github.com/wixtoolset/wix3/releases/download/wix3112rtm/wix311.exe" -OutFile "wix311.exe"
-        Start-Process -FilePath "wix311.exe" -ArgumentList "/quiet" -Wait
-        $wixPath = "${env:ProgramFiles(x86)}\WiX Toolset v3.11\bin"
+        choco install wixtoolset --version=3.11.2 -y
     - run: .github/scripts/env.ps1
     - name: Build deps
       run: |
