@@ -129,28 +129,28 @@ jobs:
         arch:
           - x64
           - arm64
-      runs-on: ${{ matrix.arch == 'arm64' && 'windows-11-arm' || 'windows-2022' }}
-      steps:
-      - uses: actions/checkout@v4
-        with:
-          # Perform a full checkout #13471
-          fetch-depth: 0
-      - run: .github/scripts/env.ps1
-      - name: Build deps
-        run: |
-          cmake -S cmake.deps -B .deps -G Ninja -DCMAKE_BUILD_TYPE=${{ needs.setup.outputs.build_type }}
-          cmake --build .deps
-      - name: build package
-        run: |
-          cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=${{ needs.setup.outputs.build_type }}
-          cmake --build build --target package
-      - uses: actions/upload-artifact@v4
-        with:
-          name: nvim-win64
-          path: |
-            build/nvim-win${{ matrix.arch == 'arm64' && 'arm64' || '64' }}.msi
-            build/nvim-win${{ matrix.arch == 'arm64' && 'arm64' || '64' }}.zip
-          retention-days: 1
+    runs-on: ${{ matrix.arch == 'arm64' && 'windows-11-arm' || 'windows-2022' }}
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        # Perform a full checkout #13471
+        fetch-depth: 0
+    - run: .github/scripts/env.ps1
+    - name: Build deps
+      run: |
+        cmake -S cmake.deps -B .deps -G Ninja -DCMAKE_BUILD_TYPE=${{ needs.setup.outputs.build_type }}
+        cmake --build .deps
+    - name: build package
+      run: |
+        cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=${{ needs.setup.outputs.build_type }}
+        cmake --build build --target package
+    - uses: actions/upload-artifact@v4
+      with:
+        name: nvim-win64
+        path: |
+          build/nvim-win${{ matrix.arch == 'arm64' && 'arm64' || '64' }}.msi
+          build/nvim-win${{ matrix.arch == 'arm64' && 'arm64' || '64' }}.zip
+        retention-days: 1
 
   publish:
     needs: [linux, macos, windows]
