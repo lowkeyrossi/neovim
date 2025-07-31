@@ -145,11 +145,11 @@ jobs:
     - run: .github/scripts/env.ps1
     - name: Build deps
       run: |
-        cmake -S cmake.deps -B .deps -G Ninja -DCMAKE_BUILD_TYPE=${{ needs.setup.outputs.build_type }}
+        cmake -S cmake.deps -B .deps -G Ninja -DCMAKE_BUILD_TYPE=${{ needs.setup.outputs.build_type }} -A ${{ matrix.arch == 'arm64' && 'ARM64' || 'x64' }}
         cmake --build .deps
     - name: build package
       run: |
-        cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=${{ needs.setup.outputs.build_type }}
+        cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=${{ needs.setup.outputs.build_type }} -A ${{ matrix.arch == 'arm64' && 'ARM64' || 'x64' }}
         cmake --build build --target package
     - uses: actions/upload-artifact@v4
       with:
