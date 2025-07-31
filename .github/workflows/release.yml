@@ -135,6 +135,12 @@ jobs:
       with:
         # Perform a full checkout #13471
         fetch-depth: 0
+    - name: Install WiX Toolset for Win-ARM64
+      if: matrix.arch == 'arm64'
+      run: |
+        Invoke-WebRequest -Uri "https://github.com/wixtoolset/wix3/releases/download/wix3112rtm/wix311.exe" -OutFile "wix311.exe"
+        Start-Process -FilePath "wix311.exe" -ArgumentList "/quiet" -Wait
+        $wixPath = "${env:ProgramFiles(x86)}\WiX Toolset v3.11\bin"
     - run: .github/scripts/env.ps1
     - name: Build deps
       run: |
