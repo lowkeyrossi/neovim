@@ -147,6 +147,8 @@ jobs:
         with:
           fetch-depth: 0
       - run: .github/scripts/env.ps1
+        env:
+          BUILD_ARCH: ${{ matrix.arch }}
       - name: Build deps
         run: |
           cmake -S cmake.deps -B .deps -G Ninja -DCMAKE_BUILD_TYPE=${{ needs.setup.outputs.build_type }}
