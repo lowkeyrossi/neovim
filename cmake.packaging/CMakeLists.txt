@@ -21,14 +21,26 @@ set(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/LICENSE.txt")
 set(CPACK_RESOURCE_FILE_README ${PROJECT_SOURCE_DIR}/README.md)
 
 if(WIN32)
-  if(CMAKE_SYSTEM_PROCESSOR MATCHES "arm64")
+  # Detect ARM64 more reliably - check multiple sources
+  set(IS_ARM64 FALSE)
+  if(CMAKE_SYSTEM_PROCESSOR MATCHES "arm64" OR 
+     CMAKE_SYSTEM_PROCESSOR MATCHES "ARM64" OR
+     CMAKE_GENERATOR_PLATFORM MATCHES "ARM64" OR 
+     "$ENV{PROCESSOR_ARCHITECTURE}" MATCHES "ARM64" OR
+     "$ENV{RUNNER_ARCH}" MATCHES "ARM64")
+    set(IS_ARM64 TRUE)
+  endif()
+  
+  if(IS_ARM64)
     # Windows ARM64 - only generate ZIP
     set(CPACK_PACKAGE_FILE_NAME "nvim-win64-arm64")
     set(CPACK_GENERATOR ZIP)
+    message(STATUS "Detected ARM64 architecture - generating ZIP package only")
   else()
     # Windows x64 - generate both ZIP and MSI
     set(CPACK_PACKAGE_FILE_NAME "nvim-win64")
     set(CPACK_GENERATOR ZIP WIX)
+    message(STATUS "Detected x64 architecture - generating ZIP and WIX packages")
     # WIX
     # CPACK_WIX_UPGRADE_GUID should be set, but should never change.
     # CPACK_WIX_PRODUCT_GUID should not be set (leave as default to auto-generate).
