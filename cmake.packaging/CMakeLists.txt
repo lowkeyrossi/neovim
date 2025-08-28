@@ -1,4 +1,4 @@
-if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(arm64|ARM64|aarch64)$")
+if("CMAKE_SYSTEM_PROCESSOR" MATCHES "(?i)^(arm64|aarch64)$")
   set(IS_ARM64 TRUE)
 else()
   set(IS_ARM64 FALSE)
