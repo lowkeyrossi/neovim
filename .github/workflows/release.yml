@@ -150,6 +150,9 @@ jobs:
       - run: .github/scripts/env.ps1
         env:
           BUILD_ARCH: ${{ matrix.arch }}
+      - name: Install WiX
+        if: matrix.arch == 'arm64'
+        run: dotnet tool install --global wix
       - name: Build deps
         run: |
           cmake -S cmake.deps -B .deps -G Ninja -DCMAKE_BUILD_TYPE=${{ needs.setup.outputs.build_type }}
