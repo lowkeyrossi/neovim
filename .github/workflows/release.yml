@@ -152,8 +152,8 @@ jobs:
           BUILD_ARCH: ${{ matrix.arch }}
       - name: Install WiX
         run: |
-          choco install wixtoolset
-          echo "C:\Program Files (x86)\WiX Toolset v3.11\bin" >> $GITHUB_PATH
+          dotnet tool install --global wix
+          echo "$env:USERPROFILE\.dotnet\tools" >> $env:GITHUB_PATH
       - name: Build deps
         run: |
           cmake -S cmake.deps -B .deps -G Ninja -DCMAKE_BUILD_TYPE=${{ needs.setup.outputs.build_type }}
