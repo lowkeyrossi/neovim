@@ -167,7 +167,7 @@ jobs:
           name: ${{ matrix.arch == 'x86_64' && 'nvim-win64' || 'nvim-win-arm64' }}
           path: |
             build/${{ matrix.zip_name }}
-            ${{ matrix.arch == 'x86_64' && format('build/nvim-win64.msi') || 'build/nvim-winarm64.msi' }}
+            ${{ matrix.arch == 'x86_64' && format('build/nvim-win64.msi') || format('build/nvim-winarm64.msi') }}
           retention-days: 1
 
   publish:
