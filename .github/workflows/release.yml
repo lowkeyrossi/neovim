@@ -150,10 +150,11 @@ jobs:
       - run: .github/scripts/env.ps1
         env:
           BUILD_ARCH: ${{ matrix.arch }}
-      - name: Install WiX
+      - name: Install Wix
         run: |
-          dotnet tool install --global wix --version 3.*
-          echo "$env:USERPROFILE\.dotnet\tools" >> $env:GITHUB_PATH
+          Invoke-WebRequest -Uri "https://github.com/wixtoolset/wix3/releases/download/wix3141rtm/wix314-binaries.zip" -OutFile "wix314-binaries.zip"
+          Expand-Archive -Path "wix314-binaries.zip" -DestinationPath "C:\wix"
+          echo "C:\wix" >> $env:GITHUB_PATH
       - name: Build deps
         run: |
           cmake -S cmake.deps -B .deps -G Ninja -DCMAKE_BUILD_TYPE=${{ needs.setup.outputs.build_type }}
