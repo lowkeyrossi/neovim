@@ -152,7 +152,7 @@ jobs:
           BUILD_ARCH: ${{ matrix.arch }}
       - name: Install WiX
         run: |
-          dotnet tool install --global wix
+          dotnet tool install --global wix --version 3.*
           echo "$env:USERPROFILE\.dotnet\tools" >> $env:GITHUB_PATH
       - name: Build deps
         run: |
