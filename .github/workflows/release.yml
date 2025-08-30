@@ -137,10 +137,10 @@ jobs:
         include:
           - runner: windows-2022
             arch: x86_64
-            zip_name: nvim-win64.zip
+            zip_name: nvim-win-x64.zip
           - runner: windows-11-arm
             arch: arm64
-            zip_name: nvim-winarm64.zip
+            zip_name: nvim-win-arm64.zip
     runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v5
